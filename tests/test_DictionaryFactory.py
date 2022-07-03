@@ -1,15 +1,20 @@
 import unittest
 import logging
 from DictionaryFactory import dictionaryFactory
+from slotContainer import slotContainer
 import os
 
+PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
 
 class test_DictionaryFactory(unittest.TestCase):
+
+
+
 
     def test_constructor(self):
 
         df= dictionaryFactory()
-        filename = "./tests/testdict.txt"
+        filename = f"{PWD}/tests/testdict.txt"
         dict = df.createFromFile(filename)
         for w in dict.lexicon:
             if not len(w) == 5 :
@@ -35,6 +40,45 @@ class test_DictionaryFactory(unittest.TestCase):
 
 
 
+     # checks to make sure there is no letter in the dictionary of words
+    def _detectLetter(self,dict, letterList):
+        for word in dict:
+            for letter in letterList:
+                if letter in word:
+                    print(f"Hello, found letter {letter} in {word}")
+                    return False
+
+        return True
+
+
+    def test_dictionaryfiltering(self):
+
+        print("Testing filtering running")
+        df = dictionaryFactory()
+        filename = f"{PWD}/tests/testdict_large.txt"
+        dict = df.createFromFile(filename)
+        searchword = "whity"
+        slc = slotContainer()
+
+        slc.assignWord("whack")
+        slc.setFeeback(1, True, False)  # word starts with w
+        slc.setFeeback(2, True, False)  # 2nd letter starts with a h
+        slc.setFeeback(3, False, False)  # there is no a
+        slc.setFeeback(4, False, False)  # there is no c
+        slc.setFeeback(5, False, False)  # there is no k
+        fileredDictionary = df.filterCurrentDictionary(dict,slc)
+
+        self.assertTrue(self._detectLetter(fileredDictionary.lexicon,['a','c','k']),"the lexicon should not contain these letters")
+        slc.assignWord("whyte")
+        slc.setFeeback(1, True, False)  # word starts with w
+        slc.setFeeback(2, True, False)  # 2nd letter starts with a h
+        slc.setFeeback(3, False, True)  # there is a y but not in 3rd position
+        slc.setFeeback(4, True, False)  # there is a t is this place
+        slc.setFeeback(5, False, False)  # there is no e
+        fileredDictionary = df.filterCurrentDictionary(fileredDictionary, slc)
+        self.assertTrue(self._detectLetter(fileredDictionary.lexicon, ['a', 'c', 'k','e']),
+                        "the lexicon should not contain these letters")
+
 
 
 
@@ -42,7 +86,7 @@ class test_DictionaryFactory(unittest.TestCase):
     def test_cacheDict(self):
 
         df= dictionaryFactory()
-        filename = "./tests/testdict.txt"
+        filename = f"{PWD}/tests/testdict.txt"
         cv = filename[:-3]+'val'
         if os.path.exists(cv):
             os.remove(cv)

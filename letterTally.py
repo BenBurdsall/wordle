@@ -10,48 +10,92 @@ class letterTally:
         self.letterPosition = {}
         self.letterTotal = {}
 
+    # increments the count of a letter in a given poistion by 1
     def incLetter(self,letter,position):
 
-        key = f"{letter}-{position}"
+        if not position in self.letterPosition:
+            self.letterPosition[position]={}
 
-        # check to see if letter has been seen before- if not initalise it
-        if letter not in self.letterTotal:
-            self.letterTotal[letter] =0
+        if not letter in  self.letterPosition[position]:
+            self.letterPosition[position][letter]=1
         else:
-            # increment total occurance of a letter in any position - might be useful
-            self.letterTotal[letter] = self.letterTotal[letter] +1
+            self.letterPosition[position][letter]+=1
 
-        if key not in self.letterPosition:
-            self.letterPosition[key] = 1
-        else:
-            # increment usage of this letter at this position [1..5] in the word
-            self.letterPosition[key] = self.letterPosition[key] +1
+
+
+
+
 
 
     # Finds the highest occurring frequency of letters in a given position
-    # returns just the frequency
-    def _findHighestOccrrance(self):
-        keys = list(self.letterPosition.keys())
+    # returns  the frequency and the letter
+    def _findHighestOccrranceAtPosition(self,position):
+        keys = list(self.letterPosition[position])
         firstKey = keys[0]
         # assume the first key has highest frequency
-        hf  = self.letterPosition[firstKey]
-        indexKey = firstKey
+        hf  = self.letterPosition[position][firstKey]
+        letter= firstKey
         for key in keys:
-            cf = self.letterPosition[key]
+            cf = self.letterPosition[position][key]
             # if the cf frequency has higher than the recorded highest  -record a new highest and key
             if cf > hf:
                 hf =cf
-        return hf
+                letter =key
+        return hf,letter
+
+
+    # finds the highest value in a dictionry, returns both value followed by name
+    def _findMaxInDict(self,dict):
+        keys = list(dict)
+        firstKey = keys[0]
+        hf = dict[firstKey]
+        letter = firstKey
+        for key in keys:
+            cf = dict[key]
+            # if the cf frequency has higher than the recorded highest  -record a new highest and key
+            if cf > hf:
+                hf =cf
+                letter =key
+        return hf,letter
+
+
+    # Finds the highest occurring/ frequency letter aggregated across all  free slots. This works by going through each of the remaining free slots.
+    # freeSlotIndexes = [1,4,5]
+    # returns the tuple count consisting of the Slot position, the frequency of letter in THAT POSITION
+    def _findHighestOccrrance(self,freeSlotIndexes):
+
+        self.letterTotal = {}
+        # build the letter total index
+        position = 0
+        hf = 0
+        for si in freeSlotIndexes:
+            f,l  = self._findHighestOccrranceAtPosition(si)
+            # record the position where the highest letter occurred
+            if f > hf:
+                position  = si
+                hf = f
+            current = self.letterTotal.get(l,0)
+            self.letterTotal[l] = current +f
+        # now find most often occuring letter and frequency
+
+        totalf,letter = self._findMaxInDict(self.letterTotal)
+
+        # find the frequency of that letter in that position
+        slotf = self.letterPosition[position][letter]
+
+        tc = tupleCount(letter,position,slotf)
+
+        return tc
+
+
 
     # finds all letters with a given frequency in a specific slot . Returns a list of  tupleCountObject
-    def _findLettersWithFrequency(self,freq):
+    def _findLettersWithFrequencyAtPosition(self, position, freq):
         letterList = []
-        for key in self.letterPosition:
-            cf = self.letterPosition[key]
+        for key in self.letterPosition[position]:
+            cf = self.letterPosition[position][key]
             if cf == freq:
-                split = key.split('-')
-                letter = split[0]
-                position = split[1]
+                letter = key
                 tc = tupleCount(letter,position,cf)
                 letterList.append(tc)
         return letterList
@@ -59,16 +103,16 @@ class letterTally:
 
     # selectes the best guesses (the most frequently occuring leters in the same position). Returns at least noChoices - but possibly more.
     # returns a list of tupleCountObjects
-    def chooseTopLetterChoices(self, nochoices):
+    def chooseTopLetterChoices(self,position, nochoices):
         topChoices = []
         found = 0
-        hf = self._findHighestOccrrance()
+        hf,letter = self._findHighestOccrranceAtPosition(position)
 
         while found < nochoices:
             if hf == 0:
                 raise Exception("There was no occurance of any letter")
             # get the single tuple or multiple tupples that make the best choices
-            commonLetterList = self._findLettersWithFrequency(hf)
+            commonLetterList = self._findLettersWithFrequencyAtPosition(position, hf)
             noChoices = len(commonLetterList)
             if noChoices > 0:
                 topChoices += commonLetterList

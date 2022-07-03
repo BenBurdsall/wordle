@@ -2,6 +2,7 @@ import logging
 from Dictionary import dictionary
 import hashlib
 from os.path import exists
+from slotContainer import slotContainer
 
 class dictionaryFactory:
 
@@ -9,6 +10,48 @@ class dictionaryFactory:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
+
+    # Applies the hard constraints in the dictionary to filter out words that break the constraints
+    def filterCurrentDictionary(self,currentDictionary, slotcontainer):
+        filterDict = dictionary()
+
+        for word in currentDictionary.lexicon:
+            keep = True
+            # First check the slot level constaints
+            for slot in slotcontainer.slotList:
+                position = slot.position
+                wordLetter = word[position-1]
+                # if  the letter in the slot is fixed - and the letter matches the slot then keep it, otherwise drop it
+                if slot.fixed:
+                    letter = slot.currentLetter
+                    if not letter  == wordLetter:
+                        keep = False
+                        break
+                # check the wordLetter is not in the forbidden list
+                cannotSlotList = slot.cannotContainer
+                if wordLetter in cannotSlotList:
+                        keep = False
+                        break
+
+            # if the word is still ok to keep for now - do more checks
+            if keep:
+                # Now check slotcontainer level constraints
+                for letter in slotcontainer.wordContains:
+                    if letter not in word:
+                        keep = False
+                        break
+
+                for letter in slotcontainer.wordDoesNotContain:
+                    if letter in word:
+                        keep = False
+                        break
+
+                # if the word passes all the checks then keep it
+                if keep:
+                    filterDict.addWord(word)
+
+
+        return filterDict
 
     def createFromFile(self, filename="./dictionary/master10000.txt"):
         dict = dictionary()

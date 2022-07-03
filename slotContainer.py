@@ -15,8 +15,18 @@ class slotContainer:
         self.wordContains = []
         self.feedbackedExpected = False
         self.createSlots()
+        self.assignedWord = ""
 
-    # initiates a blank word of slots
+    # if the slots have been fixed these letters can be removed from wordContains information
+    def removedFixedWordContains(self):
+        for slot in self.slotList:
+            if slot.fixed:
+                letter = slot.currentLetter
+                if letter in self.wordContains:
+                    self.wordContains.remove(letter)
+
+
+        # initiates a blank word of slots
     def createSlots(self):
         self.slotList = []
         for count in range(1,slotContainer.WORDLEWORDLENGTH+1):
@@ -25,7 +35,8 @@ class slotContainer:
         return self.slotList
 
     # Assigns a new trial word to the slot container, this will fill each of the slot in turn.  You must call setFeedback method before calling this again
-    def assignWord(self,word):
+    def assignWord(self,wordInput):
+        word = wordInput.lower()
         if not len(word) == slotContainer.WORDLEWORDLENGTH:
             raise Exception(f"You cannot assignword {word} as it is not right length ")
 
@@ -33,6 +44,8 @@ class slotContainer:
             raise Exception("You cannot assignWord a second time without calling setFeedback inbetween")
 
         self.feedbackedExpected = True
+
+        self.assignedWord = word
 
         # as we dealing with list positions index starts at 0 and not at 1
         for index in range(0,slotContainer.WORDLEWORDLENGTH):

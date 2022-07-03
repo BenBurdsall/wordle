@@ -11,8 +11,8 @@ class slot:
         self.position = position
 
     def assignLetter(self,letter):
-        if self.fixed:
-            raise Exception(f"You are trying to assign the letter {letter} to a slot {self.position} that is already fixed to {self.currentLetter} ")
+        if self.fixed and not letter == self.currentLetter:
+            raise Exception(f"You are trying to assign a DIFFERENT letter {letter} to a slot {self.position} that is already fixed to {self.currentLetter} ")
 
         if letter in self.cannotContainer:
             raise Exception
@@ -36,8 +36,7 @@ class slot:
         if self.currentLetter in self.cannotContainer:
             raise Exception(f"Slot {self.position} cannot be set as being correct with letter {self.currentLetter} as this letter has already been declared as incorrect")
 
-        if self.fixed:
-            raise Exception(f"The letter for slot {self.position} has already been fixed as {self.currentLetter}- cannot fix it again ")
+
 
         self.fixed = True
         self.logger.info(f" fixing slot {self.position} as the letter {self.currentLetter}")
