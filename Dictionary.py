@@ -28,7 +28,7 @@ class dictionary:
         # dont let any duplicates in
         if word not in self.lexicon:
             # for each new word in dictionary - add the tally of the letter
-            for position in range[1:6]:
+            for position in range(1,6):
                 letter = word[position -1]
                 self.lt.incLetter(letter,position)
             self.lexicon.append(word.lower())

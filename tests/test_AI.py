@@ -10,21 +10,51 @@ logging.basicConfig(level=logging.INFO)
 
 class test_AI(unittest.TestCase):
 
-    def test_constructor(self):
 
-        slc = slotContainer()
+    def _loadDict(self):
 
-        # search word is whity
-        slc.assignWord("wack")
         df = dictionaryFactory()
         filename = f"{PWD}/tests/testdict_large.txt"
         dict = df.createFromFile(filename)
-        slc.setFeeback(1, True, False)  # word starts with w
-        slc.setFeeback(2, False, False)
-        slc.setFeeback(3, False, False)
-        slc.setFeeback(4, False, False)
-        slc.setFeeback(5, False, False)
-        fileredDictionary = df.filterCurrentDictionary(dict, slc)
+        return dict
 
-        ai = AI(slc)
-        nextguess = ai.nextWord()
+    def test_constructor(self):
+
+
+        # search word is whity
+
+
+        ai = AI()
+        ai.enteredWord("wacky")
+        ai.enterWordleFeedback([ai.GREY,ai.YELLOW, ai.GREEN,ai.GREEN,ai.GREY])
+        slc = ai.slotcon
+        sl =slc.slotList
+        s1 =sl[0]
+        s2  =sl[1]
+        s3 = sl[2]
+        s4 = sl[3]
+        s5 = sl[4]
+        self.assertFalse(s1.fixed)
+        self.assertFalse(s2.fixed)
+        self.assertTrue(s3.fixed)
+        self.assertTrue(s4.fixed)
+        self.assertFalse(s5.fixed)
+        containsl = slc.wordContains
+        self.assertEqual(containsl,['a','c','k'])
+
+    def test_nextWord(self):
+        dict  =self._loadDict()
+
+        # search word is Whity
+        ai = AI()
+        ai.setDictionary(dict)
+        ai.enteredWord("wacky")
+        ai.enterWordleFeedback([ai.GREY, ai.YELLOW, ai.GREEN, ai.GREEN, ai.GREY])
+        ai.nextWord()
+
+
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    unittest.main()

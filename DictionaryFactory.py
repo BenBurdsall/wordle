@@ -27,19 +27,10 @@ class dictionaryFactory:
                     if not letter  == wordLetter:
                         keep = False
                         break
-                # check the wordLetter is not in the forbidden list
-                cannotSlotList = slot.cannotContainer
-                if wordLetter in cannotSlotList:
-                        keep = False
-                        break
+
 
             # if the word is still ok to keep for now - do more checks
             if keep:
-                # Now check slotcontainer level constraints
-                for letter in slotcontainer.wordContains:
-                    if letter not in word:
-                        keep = False
-                        break
 
                 for letter in slotcontainer.wordDoesNotContain:
                     if letter in word:

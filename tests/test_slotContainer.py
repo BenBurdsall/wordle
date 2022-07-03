@@ -31,6 +31,21 @@ class test_slotContainer(unittest.TestCase):
         sl.correctLetter()
         self.assertTrue(sl.fixed)
 
+    def test_freeSlots(self):
+        slc = slotContainer()
+
+        slc.assignWord("voice")
+        slc.setFeeback(1, True, False)  # word starts with v
+        slc.setFeeback(2, False, False)  # word does not contain an o
+        slc.setFeeback(3, False, True, )  # word does contain an i but not in 3rd position
+        slc.setFeeback(4, False, False)  # word does not contain a c
+        slc.setFeeback(5, True, False)  # word does contain an e in the last position
+        fs = slc.freeSlots()
+        print(f"Free slots {fs}")
+        self.assertTrue(len(fs),3)
+        self.assertEqual(fs,[2,3,4])
+
+
     def test_setFeeback(self):
         slc =slotContainer()
 

@@ -10,6 +10,14 @@ class slot:
         self.cannotContainer = []
         self.position = position
 
+    def clone(self):
+        cl = slot()
+        cl.currentLetter = self.currentLetter
+        cl.fixed  =self.fixed
+        cl.cannotContainer = self.cannotContainer.copy()
+        cl.position = self.position
+        return cl
+
     def assignLetter(self,letter):
         if self.fixed and not letter == self.currentLetter:
             raise Exception(f"You are trying to assign a DIFFERENT letter {letter} to a slot {self.position} that is already fixed to {self.currentLetter} ")

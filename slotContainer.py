@@ -1,5 +1,6 @@
 import logging
 from slot import slot
+import copy
 
 
 
@@ -25,6 +26,34 @@ class slotContainer:
                 if letter in self.wordContains:
                     self.wordContains.remove(letter)
 
+    # returns an ordered list [1..5] of slots positions that are not FIXED
+    def freeSlots(self):
+        fsList = []
+        for slot in self.slotList:
+            if not slot.fixed:
+                position= slot.position
+                fsList.append(position)
+        return fsList
+
+    # forms a five letter word based on current slotcontainer
+    def makeWordFromSlots(self):
+        word =""
+        for slot in self.slotList:
+            word = word + slot.currentLetter
+        return word
+
+    # creates a new copy of itself
+    def clone(self):
+        cl = slotContainer()
+        cl.wordContains = self.wordContains.copy()
+        cl.wordDoesNotContain =self.wordDoesNotContain.copy()
+        cl.slotList = []
+        for slot in self.slotList:
+            cloneSlot = slot.clone()
+            cl.slotList.append(cloneSlot)
+
+        return cl
+
 
         # initiates a blank word of slots
     def createSlots(self):
@@ -37,6 +66,8 @@ class slotContainer:
     # Assigns a new trial word to the slot container, this will fill each of the slot in turn.  You must call setFeedback method before calling this again
     def assignWord(self,wordInput):
         word = wordInput.lower()
+        # Eveery time you assign a word - it clears the memory, as you need to provide feedback after
+        self.createSlots()
         if not len(word) == slotContainer.WORDLEWORDLENGTH:
             raise Exception(f"You cannot assignword {word} as it is not right length ")
 
@@ -57,6 +88,15 @@ class slotContainer:
     def assignLetterToSlot(self,position, letter):
         slo = self.slotList[position - 1]
         slo.assignLetter(letter)
+
+    # used to temporary to fix a letter to a given slot - in cloning
+    def setCandidate(self,position,letter):
+        slot = self.slotList[position-1]
+        if not slot.position == position:
+            self.logger.error("SetCandidate was changing a slot in the wrong position")
+            raise  Exception("SetCandidate and SlotList is out of sync")
+        slot.fixed=True
+        slot.currentLetter =letter
 
 
     # give feedback from the wordle app - for a given slot, indicating if the current slot position has the correct letter
