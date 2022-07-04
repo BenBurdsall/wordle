@@ -17,11 +17,12 @@ class dictionary:
     def setFileName(self,file):
         self.filename = file
 
-    def isPresent(self,word):
+    def isPresent(self,wordin):
+        word = wordin.lower()
         return word in self.lexicon
 
-    def addWord(self, word):
-
+    def addWord(self, wordin):
+        word = wordin.lower()
 
         if not len(word) == dictionary.WORDLEWORDLENGTH:
             raise Exception(f"A word with the wrong legnth was added to the dictionary {word}")
@@ -31,7 +32,7 @@ class dictionary:
             for position in range(1,6):
                 letter = word[position -1]
                 self.lt.incLetter(letter,position)
-            self.lexicon.append(word.lower())
+            self.lexicon.append(word)
 
     # returns True if there are no words in the dictionary
     def isOutofWords(self):
@@ -41,3 +42,6 @@ class dictionary:
         if len(self.lexicon) == 1:
             return self.lexicon[0]
         return None
+
+    def wordCount(self):
+        return len(self.lexicon)

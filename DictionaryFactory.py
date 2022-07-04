@@ -49,8 +49,9 @@ class dictionaryFactory:
         dict.setFileName(filename)
 
         if self._useCachedDictionary(filename):
-            self.logger.info("Loading from Cached version of the file")
+
             cleanWordList = self._readWordsFromCacheCleanFile(filename)
+            self.logger.info(f"Loading from Cached version of the file  -containing {len(cleanWordList)} 5-letter words")
             dict.setDictionary(cleanWordList)
             return dict
 
@@ -63,14 +64,16 @@ class dictionaryFactory:
 
         linedRead = len(lines)
         # now filter down the list to choose only 5 letter words
-
+        count = 0
         for word in lines:
             # remove any white space or commas or comments in the text file
             if not "#" in word:
                 cleanWord = word.replace(',',"").replace(" ","").strip()
                 if len(cleanWord) == dictionaryFactory.WORDLEWORDLENGTH:
                     dict.addWord(cleanWord)
+                count += 1
 
+        self.logger.info(f"Total words read form file {count} of which {dict.wordCount()} are 5-letter ones")
         # now write a stripped down version file with only the clean 5 letter words
         self._writeCleanDictionaryAsCache(dict)
         return dict

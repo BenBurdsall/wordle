@@ -47,6 +47,7 @@ class slotContainer:
         cl = slotContainer()
         cl.wordContains = self.wordContains.copy()
         cl.wordDoesNotContain =self.wordDoesNotContain.copy()
+        cl.assignedWord = self.assignedWord
         cl.slotList = []
         for slot in self.slotList:
             cloneSlot = slot.clone()

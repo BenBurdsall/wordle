@@ -11,7 +11,7 @@ class slot:
         self.position = position
 
     def clone(self):
-        cl = slot()
+        cl = slot(self.position)
         cl.currentLetter = self.currentLetter
         cl.fixed  =self.fixed
         cl.cannotContainer = self.cannotContainer.copy()
