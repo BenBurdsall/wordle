@@ -108,7 +108,7 @@ class AI:
             wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
         else:
             minMax = minMaxStrategy(self.masterDictionary)
-            wordguess = minMax._chooseMinMax(self.dictionary)
+            wordguess = minMax.nextWord(self.dictionary)
 
         return wordguess, False # False means you can keep on guessing, there are words left
 

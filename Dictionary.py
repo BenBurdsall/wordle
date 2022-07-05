@@ -13,6 +13,7 @@ class dictionary:
     def clone(self):
         cloneDict = dictionary()
         cloneDict.lexicon = self.lexicon.copy()
+        return cloneDict
 
 
     # loads the passed list of words as the lexicon

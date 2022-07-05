@@ -5,7 +5,8 @@ from DictionaryFactory import dictionaryFactory
 import logging
 from localWordleSimulator import localWordleSimulator
 
-PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
+#PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
+PWD = '.'
 
 logging.basicConfig(level=logging.INFO)
 
