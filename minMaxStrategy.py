@@ -54,14 +54,17 @@ if __name__ == '__main__':
     sim = sim(dict)
     solver = minMaxStrategy(dict)
     
+    f = open(testfile, "r")
+    test = f.readlines()
+    f.close()
+
+    print('Dictionary size = {}'.format(len(dict.lexicon)))
+    print('Back testing dataset size = {}'.format(len(test)))
+
     # we always have the same first guess
     print('Searching for best starting word...')
     start_word = solver.nextWord(dict, show_progress=True) 
     print('Starting word: {}'.format(start_word))
-
-    f = open(testfile, "r")
-    test = f.readlines()
-    f.close()
 
     for solution in test:
         solution = solution.strip().lower()
@@ -77,7 +80,7 @@ if __name__ == '__main__':
 
         for n in range(10):
 
-            print('Guess word: {}'.format(word))
+            print('Guess word number {}: {}'.format(n+1, word))
             feedback = sim.produceFeedback(word)
             print('Feedback received: {}'.format(feedback))
 
@@ -111,6 +114,6 @@ if __name__ == '__main__':
             dict = dictionary()
             dict.setDictionary(filtered)
 
-            print('Generating guess word #{} with {} possible words remaining...'.format(n+1, len(dict.lexicon)))
+            print('Generating guess word with {} possible words remaining...'.format(len(dict.lexicon)))
             word = solver.nextWord(dict)
 
