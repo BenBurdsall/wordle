@@ -56,7 +56,7 @@ if __name__ == '__main__':
     
     # we always have the same first guess
     print('Searching for best starting word...')
-    start_word = solver.nextWord(dict) 
+    start_word = solver.nextWord(dict, show_progress=True) 
     print('Starting word: {}'.format(start_word))
 
     f = open(testfile, "r")
