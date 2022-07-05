@@ -1,11 +1,11 @@
 import logging
 import sys
+
 from Dictionary import dictionary
-from DictionaryFactory import dictionaryFactory
-from localWordleSimulator import localWordleSimulator
+from DictionaryFactory import dictionaryFactory as df
+from localWordleSimulator import localWordleSimulator as sim
 
 PWD = '.'
-
 
 class minMaxStrategy:
 
@@ -13,60 +13,104 @@ class minMaxStrategy:
         self.logger = logging.getLogger(__name__)
         self.master = masterdictionary.clone()
 
-    def nextWord(self, filteredDictionary):
+    def nextWord(self, filteredDictionary, show_progress=False):
 
         master = self.master.lexicon
         active = set(filteredDictionary.lexicon)
 
         best_word, best_score = '', 0
         for p, word in enumerate(master):
-            letters = set(word)
             partitions = [0] * (3**5)
             for w in active:
                 idx = 0
-                for i, l in enumerate(w):
+                for i, l in enumerate(word):
                     idx *= 3
-                    if l in letters:
-                        idx += 2 if word[i] == l else 1
+                    idx += 2 if w[i] == l else 1 if l in w else 0
                 partitions[idx] += 1
 
             # score a word based on how much it will reduce the active set size
             score = len(active) - max(partitions)
             # prefer words in active set in case score is tied
-            if score + (1 if word in active else 0) > best_score: 
+            if (score > best_score) or (score == best_score and word in active): 
                 best_word, best_score = word, score
 
-            sys.stdout.write('\r')
-            sys.stdout.write("[%-20s] %d%%" % ('='*int((20*p)/(len(master)-1)), (100*p)/(len(master)-1)))
-            sys.stdout.flush()
+            if show_progress:
+                sys.stdout.write('\r')
+                sys.stdout.write("[%-20s] %d%%" % ('='*int((20*p)/(len(master)-1)), (100*p)/(len(master)-1)))
+                sys.stdout.flush()
 
-        sys.stdout.write('\n')
+        if show_progress:
+            sys.stdout.write('\n')
         return best_word
+
 
 if __name__ == '__main__':
     dictfile = f"{PWD}/dictionary/master10000.txt"
-    backtestfile= f"{PWD}/tests/backtest.txt"    
+    testfile = f"{PWD}/tests/backtest.txt"
 
-    df = dictionaryFactory()
+    df = df()
     dict = df.createFromFile(dictfile)
 
-    sim = localWordleSimulator(dict)
+    sim = sim(dict)
     solver = minMaxStrategy(dict)
+    
+    # we always have the same first guess
+    print('Searching for best starting word...')
+    start_word = solver.nextWord(dict) 
+    print('Starting word: {}'.format(start_word))
 
-    for guess in range(10):
-        print('Generating guess word #{}'.format(guess+1))
-        print('Possible words remaining: {}'.format(len(dict)))
-        word = solver.nextWord(dict)
-        print('Submitting guess word: {}'.format(word))
+    f = open(testfile, "r")
+    test = f.readlines()
+    f.close()
 
+    for solution in test:
+        solution = solution.strip().lower()
+        print('Searching for solution {}'.format(solution))
+        
+        dict = solver.master
+        if not dict.isPresent(solution):
+            print('Skipping solution {} - missing from dictionary'.format(solution))
+            continue
 
-        guess = "range"
-        guessCount = 10
-        while guessCount > 0:
-            ai.enteredWord(guess)
-            feedback  = localws.produceFeedback(guess)
-            ai.enterWordleFeedback(feedback)
-            guess, lastword = ai.nextWord()
-            if lastword:
-                print("Out of words")
-                guessCount=0
+        sim.setSecretWord(solution)
+        word = start_word
+
+        for n in range(10):
+
+            print('Guess word: {}'.format(word))
+            feedback = sim.produceFeedback(word)
+            print('Feedback received: {}'.format(feedback))
+
+            if feedback == [sim.GREEN] * 5:
+                print('*** Solution found in {} guesses: {} ***'.format(n+1, filtered[0]))
+                break
+
+            green, yellow, grey = [False]*5, list(), set()
+            for i in range(5):
+                if feedback[i] == sim.GREEN:
+                    green[i] = True
+                elif feedback[i] == sim.YELLOW:
+                    yellow.append(word[i])
+                elif feedback[i] == sim.GREY:
+                    grey.add(word[i])
+
+            filtered = []
+            for w in dict.lexicon:
+                match = True
+                for i,l in enumerate(w):
+                    if (l in grey) or (green[i] == True and word[i] != l) or (green[i] == False and word[i] == l):
+                        match = False
+                        break
+                for l in yellow:
+                    if l not in w:
+                        match = False
+                        break
+                if match:
+                    filtered.append(w)
+
+            dict = dictionary()
+            dict.setDictionary(filtered)
+
+            print('Generating guess word #{} with {} possible words remaining...'.format(n+1, len(dict.lexicon)))
+            word = solver.nextWord(dict)
+

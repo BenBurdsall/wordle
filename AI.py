@@ -4,7 +4,6 @@ from Dictionary import dictionary
 from slotContainer import slotContainer
 from DictionaryFactory import dictionaryFactory
 from tupleCount import tupleCount
-from minMaxStrategy import minMaxStrategy
 
 
 class AI:
@@ -104,11 +103,7 @@ class AI:
             return word, True
 
         # choose which stratey to use: clear-and-vebose or terse!
-        if strategy ==AI.BB:
-            wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
-        else:
-            minMax = minMaxStrategy(self.masterDictionary)
-            wordguess = minMax.nextWord(self.dictionary)
+        wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
 
         return wordguess, False # False means you can keep on guessing, there are words left
 
