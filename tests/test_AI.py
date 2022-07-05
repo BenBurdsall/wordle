@@ -68,7 +68,7 @@ class test_AI(unittest.TestCase):
         guessCount = 10
         while guessCount > 0:
             ai.enteredWord(guess)
-            feedback  = localws.produceFeedback()
+            feedback  = localws.produceFeedback(guess)
             ai.enterWordleFeedback(feedback)
             guess, lastword = ai.nextWord()
             if lastword:

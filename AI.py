@@ -8,6 +8,8 @@ from tupleCount import tupleCount
 
 class AI:
 
+    BB  ="BB"
+    AB = "AB"
     GREEN = "GREEN"
     YELLOW = "YELLOW"
     GREY = "GREY"
@@ -17,11 +19,13 @@ class AI:
         self.slotcon  = slotContainer()
         self.df  = dictionaryFactory()
         self.dictionary = None
+        self.masterDictionary = None
 
 
 
     def setDictionary(self, dictionary):
         self.dictionary = dictionary
+        self.masterDictionary = dictionary.clone()
 
     # This is the word typed into wordle on each attempt. Returns True or False
     def enteredWord(self,guess):
@@ -82,8 +86,8 @@ class AI:
         guess = cloneSlotContainer.makeWordFromSlots()
         return guess
 
-    # Returns the next word to try to send to Wordle
-    def nextWord(self):
+    # Returns the next word to try to send to Wordle. Returns nextWord , boolean. True when run out of words.
+    def nextWord(self, strategy=AB):
 
 
         # The filteredDictionary Now only contains the WordContains information - so this can be removed from slotContainer for LETTERS that are fixed
@@ -98,9 +102,19 @@ class AI:
             self.logger.info(f"There is only 1 word left in the dictionary it must be: {word}")
             return word, True
 
-        wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
+        if strategy ==AI.BB:
+            wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
+        else:
+            wordguess = self._chooseMinMax(self.dictionary)
 
         return wordguess, False
+
+    # Andre- c style terse algorithm goes here
+    def _chooseMinMax(self,filteredDictionary):
+
+        myMaster = self.masterDictionary
+
+
 
 
 

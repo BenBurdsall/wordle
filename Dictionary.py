@@ -10,6 +10,11 @@ class dictionary:
         self.lt = letterTally()
         self.hashValue = 0
 
+    def clone(self):
+        cloneDict = dictionary()
+        cloneDict.lexicon = self.lexicon.copy()
+
+
     # loads the passed list of words as the lexicon
     def setDictionary(self, wordlist):
         self.lexicon = wordlist
