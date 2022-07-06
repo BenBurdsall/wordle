@@ -117,3 +117,5 @@ if __name__ == '__main__':
             print('Generating guess word with {} possible words remaining...'.format(len(dict.lexicon)))
             word = solver.nextWord(dict)
 
+        if word != solution:
+            print('*** Could not find solution for secred word: {} ***'.format(solution))
