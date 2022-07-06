@@ -15,15 +15,16 @@ class localWordleSimulator:
         lexicon = dictionary.lexicon
         noItems = len(lexicon) -1
         index = random.randint(0,noItems)
-        self.word = lexicon[index]
+        self.word = lexicon[index].lower()
         self.logger.info(f"Picking the Secret word: {self.word.upper()} ")
     
     def setSecretWord(self,word):
-        self.word = word
+        self.word = word.lower()
         self.logger.info(f"Secret word set to: {self.word.upper()} ")
 
     # produces a five letter [AI.Green, AI.YELLOW ...] feedback based on the guess closeness  to the secret word
-    def produceFeedback(self,guess):
+    def produceFeedback(self,guessin):
+        guess = guessin.lower()
         if not len(guess) == 5:
             raise Exception(f"Guessed word {guess} is not 5 characters long")
         feedback = []
