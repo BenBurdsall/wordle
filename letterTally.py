@@ -59,7 +59,7 @@ class letterTally:
         return hf,letter
 
 
-    # Finds the highest occurring/ frequency letter aggregated across all  free slots. This works by going through each of the remaining free slots.
+    # Finds the highest occurring/ frequency letter for the  free slots. This works by going through each of the remaining free slots.
     # freeSlotIndexes = [1,4,5]
     # returns the tuple count consisting of the Slot position, the frequency of letter in THAT POSITION
     def _findHighestOccrrance(self,freeSlotIndexes):
@@ -68,22 +68,19 @@ class letterTally:
         # build the letter total index
         position = 0
         hf = 0
+        letter=''
         for si in freeSlotIndexes:
             f,l  = self._findHighestOccrranceAtPosition(si)
             # record the position where the highest letter occurred
             if f > hf:
                 position  = si
                 hf = f
-            current = self.letterTotal.get(l,0)
-            self.letterTotal[l] = current +f
+                letter = l
+
+
         # now find most often occuring letter and frequency
 
-        totalf,letter = self._findMaxInDict(self.letterTotal)
-
-        # find the frequency of that letter in that position
-        slotf = self.letterPosition[position][letter]
-
-        tc = tupleCount(letter,position,slotf)
+        tc = tupleCount(letter,position,hf)
 
         return tc
 

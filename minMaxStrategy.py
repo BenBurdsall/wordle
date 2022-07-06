@@ -85,34 +85,10 @@ if __name__ == '__main__':
             print('Feedback received: {}'.format(feedback))
 
             if feedback == [sim.GREEN] * 5:
-                print('*** Solution found in {} guesses: {} ***'.format(n+1, filtered[0]))
+                print('*** Solution found in {} guesses: {} ***'.format(n+1, word))
                 break
 
-            green, yellow, grey = [False]*5, list(), set()
-            for i in range(5):
-                if feedback[i] == sim.GREEN:
-                    green[i] = True
-                elif feedback[i] == sim.YELLOW:
-                    yellow.append(word[i])
-                elif feedback[i] == sim.GREY:
-                    grey.add(word[i])
-
-            filtered = []
-            for w in dict.lexicon:
-                match = True
-                for i,l in enumerate(w):
-                    if (l in grey) or (green[i] == True and word[i] != l) or (green[i] == False and word[i] == l):
-                        match = False
-                        break
-                for l in yellow:
-                    if l not in w:
-                        match = False
-                        break
-                if match:
-                    filtered.append(w)
-
-            dict = dictionary()
-            dict.setDictionary(filtered)
+            dict = df.filterCurrentDictionaryOnFeedback(dict,word,feedback)
 
             print('Generating guess word with {} possible words remaining...'.format(len(dict.lexicon)))
             word = solver.nextWord(dict)

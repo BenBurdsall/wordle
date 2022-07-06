@@ -44,7 +44,5 @@ class slot:
         if self.currentLetter in self.cannotContainer:
             raise Exception(f"Slot {self.position} cannot be set as being correct with letter {self.currentLetter} as this letter has already been declared as incorrect")
 
-
-
         self.fixed = True
         self.logger.info(f" fixing slot {self.position} as the letter {self.currentLetter}")

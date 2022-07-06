@@ -1,12 +1,29 @@
 import unittest
 import logging
 from DictionaryFactory import dictionaryFactory
+from Dictionary import dictionary
 from slotContainer import slotContainer
+from localWordleSimulator import localWordleSimulator
+import os
+import random
+
 import os
 
-PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
+home = os.environ['HOME']
+
+PWD = f"{home}/PycharmProjects/wordlebot"
+
+logging.basicConfig(level=logging.INFO)
 
 class test_DictionaryFactory(unittest.TestCase):
+
+
+    def _loadDict(self):
+
+        df = dictionaryFactory()
+        filename = f"{PWD}/dictionary/master10000.txt"
+        dict = df.createFromFile(filename)
+        return dict
 
 
 
@@ -81,10 +98,64 @@ class test_DictionaryFactory(unittest.TestCase):
 
 
 
+    def test_andreError(self):
+
+
+        print("Testing the Andre issue")
+        df = dictionaryFactory()
+        dict = self._loadDict()
+        ls= localWordleSimulator(dict)
+        ls.setSecretWord('rawly')
+        self.assertTrue(dict.isPresent("rawly"))
+        guessWord1 = 'oates'
+        feedback = ls.produceFeedback(guessWord1)
+        afeedback = ['GREY', 'GREEN', 'GREY', 'GREY', 'GREY']
+        self.assertEqual(feedback,afeedback, "local simulator didnt return the correct list")
+        slc = slotContainer()
+        slc.assignWord('oates')
+        slc.enterFeedback(afeedback)
+        fileredDictionary = df.filterCurrentDictionary(dict, slc)
+        self.assertFalse(fileredDictionary.isPresent('nirly'))
+        self.assertTrue(fileredDictionary.isPresent("rawly"))
+
+
+    def test_filterMethods(self):
+
+        print("***********Testing Filter method comparison ************")
+        for trial in range(0,200):
+
+            df = dictionaryFactory()
+            dict = self._loadDict()
+            master = dict.clone()
+            ls = localWordleSimulator(dict)
+
+            wordsremaining  =5
+            while(wordsremaining > 1):
+                noItems = dict.wordCount() - 1
+                index = random.randint(0, noItems)
+                guessWord = dict.lexicon[index]
+                print(f"Now guessing with : {guessWord} ")
+                feedback = ls.produceFeedback(guessWord)
+                slc = slotContainer()
+                slc.assignWord(guessWord)
+                slc.enterFeedback(feedback)
+                BBdict = df.filterCurrentDictionary(dict, slc)
+
+                ABdict = df.filterCurrentDictionaryOnFeedback(dict,guessWord,feedback)
+
+                result = BBdict.isEqual(ABdict)
+
+                wordsremaining = len(BBdict.lexicon)
+                print(f"Master dictionary size {len(master.lexicon)}, Before filtering {len(dict.lexicon)}, then after filtering {wordsremaining}")
+                self.assertTrue(result, f"The dictionaries diverged after filtering word {guessWord}")
+                dict = BBdict
+            print(f"Final word was {dict.lexicon[0]}")
+
 
 
     def test_cacheDict(self):
 
+        print("comparing dictionary methods")
         df= dictionaryFactory()
         filename = f"{PWD}/tests/testdict.txt"
         cv = filename[:-3]+'val'
