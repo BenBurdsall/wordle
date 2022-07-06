@@ -10,9 +10,6 @@ class AI:
 
     BB  ="BB"
     AB = "AB"
-    GREEN = "GREEN"
-    YELLOW = "YELLOW"
-    GREY = "GREY"
 
     def __init__(self):
         self.logger  =logging.getLogger(__name__)
@@ -43,19 +40,8 @@ class AI:
     # enter the feedback recived from wordle from the last guess [GREEN, GREY, GREEN, YELLOW,GREEN]
     # returns False is out of words
     def enterWordleFeedback(self,feedbackColours):
-        if not len(feedbackColours) == 5:
-            self.logger.error(f"Feedback didnt contain all 5 answers:  received {len(feedbackColours)}")
-            raise Exception("Feedback was not correct length")
 
-        position = 1
-        for entry  in feedbackColours:
-            if entry == AI.GREEN:
-                self.slotcon.setFeeback(position,True,False)
-            elif entry ==AI.YELLOW:
-                self.slotcon.setFeeback(position,False,True)
-            else:
-                self.slotcon.setFeeback(position,False,False)
-            position +=1
+        self.slotcon.enterFeedback(feedbackColours)
 
         # update the dictionary based on the feedback given
         self.dictionary = self.df.filterCurrentDictionary(self.dictionary, self.slotcon)

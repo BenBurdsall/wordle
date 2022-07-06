@@ -4,9 +4,12 @@ from slotContainer import slotContainer
 from DictionaryFactory import dictionaryFactory
 import logging
 from localWordleSimulator import localWordleSimulator
+import os
 
-#PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
-PWD = '.'
+home = os.environ['HOME']
+
+PWD = f"{home}/PycharmProjects/wordlebot"
+#PWD = '.'
 
 logging.basicConfig(level=logging.INFO)
 

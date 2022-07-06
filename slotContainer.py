@@ -8,6 +8,11 @@ class slotContainer:
 
     WORDLEWORDLENGTH = 5
 
+    GREEN = "GREEN"
+    YELLOW = "YELLOW"
+    GREY = "GREY"
+
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
@@ -55,6 +60,21 @@ class slotContainer:
 
         return cl
 
+    # Enter feedback from wordle to update the current slotcontainer. Input is a list of colours [Green, Yellow ,Yellow , Grey]
+    def enterFeedback(self,feedbackColours):
+        if not len(feedbackColours) == 5:
+            self.logger.error(f"Feedback didnt contain all 5 answers:  received {len(feedbackColours)}")
+            raise Exception("Feedback was not correct length")
+
+        position = 1
+        for entry  in feedbackColours:
+            if entry == self.GREEN:
+                self.setFeeback(position,True,False)
+            elif entry ==self.YELLOW:
+                self.setFeeback(position,False,True)
+            else:
+                self.setFeeback(position,False,False)
+            position +=1
 
         # initiates a blank word of slots
     def createSlots(self):
@@ -112,9 +132,7 @@ class slotContainer:
         if correctLetterPlace:
 
             slo.correctLetter()
-            # add the current corrfect letter to the word contains list - as it may be repeated
-            if slo.currentLetter not in self.wordContains:
-                self.wordContains.append(slo.currentLetter)
+
         elif correctLetterWrongPlace:
             # mark this letter as being correct in the slot position but add it in the wordContains list - to show that it is used somewhere
             slo.wrongLetter()

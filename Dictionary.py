@@ -15,6 +15,16 @@ class dictionary:
         cloneDict.lexicon = self.lexicon.copy()
         return cloneDict
 
+    def isEqual(self,otherDict):
+        n1 = len(self.lexicon)
+        n2 = len(otherDict.lexicon)
+        if not n1 == n2:
+            return False
+        for word in self.lexicon:
+            if word not in otherDict.lexicon:
+                return False
+        return True
+
 
     # loads the passed list of words as the lexicon
     def setDictionary(self, wordlist):
