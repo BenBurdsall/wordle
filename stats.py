@@ -1,7 +1,19 @@
+import time
+
 class stats:
 
     def __init__(self):
         self.stratScores = {}
+        self.clocks = {}
+
+
+    def startClock(self,strategy):
+        self.clocks[strategy] = time.time()
+
+    def stopClock(self,strategy):
+        now = time.time()
+        delta = now - self.clocks[strategy]
+        print(f"Computation time for {strategy} = {delta}")
 
     def registerStrategy(self,label):
         # tripple is [games-played, solved in guessses, not solved within 5]
