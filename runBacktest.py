@@ -10,7 +10,8 @@ from stats import stats
 class backTest:
 
 
-    dictfile = "./dictionary/2of12-81k.txt"
+    #dictfile = "./dictionary/2of12-81k.txt"
+    dictfile = "./dictionary/usa77.txt"
 
 
     def __init__(self):
@@ -49,7 +50,7 @@ class backTest:
                 ai = AI()
                 ai.setDictionary(dict)
                 print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
-                guess = "stair"
+                guess = "share"
                 guessCount = 6
                 done = False
                 noWords = False

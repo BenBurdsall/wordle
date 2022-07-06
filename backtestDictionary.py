@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 # PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
 PWD = '.'
 
-dictfile = f"{PWD}/dictionary/2of12-81k.txt"
+dictfile = f"{PWD}/dictionary/eng84k.txt"
 backtestfile= f"{PWD}/tests/backtest.txt"
 
 df = dictionaryFactory()
