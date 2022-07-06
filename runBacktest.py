@@ -39,6 +39,7 @@ class backTest:
             localws = localWordleSimulator(dict)
             statkeeper = stats()
             statkeeper.registerStrategy("BB")
+            statkeeper.registerStrategy("AB")
 
             for secretWord in backList:
                 #secretWord='rebut'
@@ -49,7 +50,7 @@ class backTest:
                 ai.setDictionary(dict)
                 print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
                 guess = "stair"
-                guessCount = 5
+                guessCount = 6
                 done = False
                 noWords = False
                 while guessCount > 0 and not done and not noWords:

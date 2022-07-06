@@ -10,7 +10,7 @@ class stats:
     # Records a single game result for a given strategy. Solved is a boolean, guesses is the number of guesses if it was solved within 5
     def addGameResult(self,strategy, solved, guesses):
         played, totalguess, failedcount = self.stratScores[strategy]
-        if guesses > 5:
+        if guesses > 6:
             raise Exception(f"Too many guesses enteredd {guesses}")
 
         played +=1

@@ -82,18 +82,22 @@ class AI:
 
     # Returns the next word to try to send to Wordle. Returns nextWord , boolean. True when run out of words.
     def nextWord(self, strategy=BB):
-
+        wordguess = None
 
         # The filteredDictionary Now only contains the WordContains information - so this can be removed from slotContainer for LETTERS that are fixed
-        self.slotcon.removedFixedWordContains()
+        if strategy=="BB":
+            self.slotcon.removedFixedWordContains()
 
-        if self.dictionary.isOutofWords():
-            self.logger.warning("Dictionary is out of words - no more guesses")
-            return None
+            if self.dictionary.isOutofWords():
+                self.logger.warning("Dictionary is out of words - no more guesses")
+                return None
 
 
-        # choose which stratey to use: clear-and-vebose or terse!
-        wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
+            # choose which stratey to use: clear-and-vebose or terse!
+            wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
+        elif strategy=="AB":
+            pass
+            # Andre call your next word guess
 
         return wordguess  # False means you can keep on guessing, there are words left
 
