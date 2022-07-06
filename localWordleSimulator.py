@@ -16,11 +16,11 @@ class localWordleSimulator:
         noItems = len(lexicon) -1
         index = random.randint(0,noItems)
         self.word = lexicon[index].lower()
-        self.logger.info(f"Picking the Secret word: {self.word.upper()} ")
+        print(f"Picking the Secret word: {self.word.upper()} ")
     
     def setSecretWord(self,word):
         self.word = word.lower()
-        self.logger.info(f"Secret word set to: {self.word.upper()} ")
+        print(f"Secret word set to: {self.word.upper()} ")
 
     # produces a five letter [AI.Green, AI.YELLOW ...] feedback based on the guess closeness  to the secret word
     def produceFeedback(self,guessin):

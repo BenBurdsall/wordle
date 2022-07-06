@@ -116,7 +116,7 @@ class dictionaryFactory:
         for word in lines:
             # remove any white space or commas or comments in the text file
             if not "#" in word:
-                cleanWord = word.replace(',',"").replace(" ","").strip()
+                cleanWord = word.replace(',',"").replace(" ","").replace("+","").replace(">","").replace("'","").replace(";","").replace(" ","").strip()
                 if len(cleanWord) == dictionaryFactory.WORDLEWORDLENGTH:
                     dict.addWord(cleanWord)
                 count += 1

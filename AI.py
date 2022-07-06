@@ -66,14 +66,13 @@ class AI:
             freeSlots = cloneSlotContainer.freeSlots()
             tc = lt._findHighestOccrrance(freeSlots)
             needToFind = len(freeSlots) - 1
-            self.logger.info(f"The most likely letter is {tc} . There are {needToFind} additional free letters")
+            self.logger.debug(f"The most likely letter is {tc} . There are {needToFind} additional free letters")
             # Now the best letter has been chosen - remove that position from the free Slots
             cloneSlotContainer.setCandidate(tc.position, tc.letter)
             # generate a dictionary - assuming that are best guess letter is correct
             cloneDictionary = self.df.filterCurrentDictionary(cloneDictionary, cloneSlotContainer)
             onlyWord = cloneDictionary.isOnlyWord()
             if onlyWord is not None:
-                self.logger.info(f"According to dictionary the word must be: {onlyWord}")
                 return onlyWord
             lt = cloneDictionary.lt
 

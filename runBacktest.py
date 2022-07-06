@@ -10,7 +10,7 @@ from stats import stats
 class backTest:
 
 
-    dictfile = "./dictionary/master10000.txt"
+    dictfile = "./dictionary/2of12-81k.txt"
 
 
     def __init__(self):

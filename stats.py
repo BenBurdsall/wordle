@@ -25,8 +25,14 @@ class stats:
         played, totalguess, failedcount = self.stratScores[strategy]
 
         solved = played-failedcount
-        averageGuess = totalguess / solved
-        percentagePass = 100 * solved / played
+        if not solved==0:
+            averageGuess = totalguess / solved
+        else:
+            averageGuess = 0
+        if not played==0:
+             percentagePass = 100 * solved / played
+        else:
+            percentagePass=0
         return averageGuess,percentagePass
 
 
