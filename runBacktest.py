@@ -10,8 +10,10 @@ from stats import stats
 class backTest:
 
 
-    dictfile = "./dictionary/master10000.txt"
+    #dictfile = "./dictionary/2of12-81k.txt"
+    dictfile = "./dictionary/usabt.txt"
 
+    NOGUESSES = 6
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -49,27 +51,30 @@ class backTest:
                 ai = AI()
                 ai.setDictionary(dict)
                 print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
-                guess = "stair"
-                guessCount = 6
+                guess = "share"
+                guessCount =1
                 done = False
                 noWords = False
-                while guessCount > 0 and not done and not noWords:
+                statkeeper.startClock("BB")
+                while guessCount <=self.NOGUESSES and not done and not noWords:
+
                     ai.enteredWord(guess)
-                    guessCount -= 1
                     feedback  = localws.produceFeedback(guess)
                     done,noWords = ai.enterWordleFeedback(feedback)
                     if not done:
                         guess = ai.nextWord()
                         print(f"next guess shall be {guess}")
                     else:
-                        guesses = 5-guessCount
-                        print(f"Word found {guess}={localws.word} found in {guesses} guesses")
-                        statkeeper.addGameResult("BB",True,guesses)
+                        print(f"Word found {guess}={localws.word} found in {guessCount} guesses")
+                        statkeeper.addGameResult("BB",True,guessCount)
                     if noWords:
                         print("Out of words ... giving up")
+                    guessCount += 1
 
+                statkeeper.stopClock("BB")
                 if not done:
                     statkeeper.addGameResult("BB", False, 0)
+
 
             print(statkeeper)
 
