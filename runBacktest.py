@@ -10,8 +10,8 @@ from stats import stats
 class backTest:
 
 
-    dictfile = "./dictionary/2of12-81k.txt"
-    #dictfile = "./dictionary/usa77.txt"
+    #dictfile = "./dictionary/2of12-81k.txt"
+    dictfile = "./dictionary/usabt.txt"
 
     NOGUESSES = 6
 
