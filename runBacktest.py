@@ -22,7 +22,7 @@ class backTest:
     def loadBacktest(self):
         backList =[]
 
-        backtestfile = "./tests/backtest.txt"
+        backtestfile = "./tests/backtestcomplete.txt"
         with open(backtestfile, "r") as f:
             lines = f.readlines()
         count = 0
@@ -51,7 +51,7 @@ class backTest:
                 ai = AI()
                 ai.setDictionary(dict)
                 print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
-                guess = "share"
+                guess = "tares"
                 guessCount =1
                 done = False
                 noWords = False

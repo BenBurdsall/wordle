@@ -8,8 +8,8 @@ logging.basicConfig(level=logging.INFO)
 # PWD = "/Users/benburdsall/PycharmProjects/wordlebot"
 PWD = '.'
 
-dictfile = f"{PWD}/dictionary/eng84k.txt"
-backtestfile= f"{PWD}/tests/backtest.txt"
+dictfile = f"{PWD}/dictionary/collins279k.txt"
+backtestfile= f"{PWD}/tests/backtestcomplete.txt"
 
 df = dictionaryFactory()
 dict = df.createFromFile(dictfile)
@@ -20,11 +20,12 @@ with open(backtestfile,"r") as f:
     lines = f.readlines()
 
 count =0
+print("These words are missing")
 for line in lines:
 
     clean = line.strip()
     if not dict.isPresent(clean):
-        print(f"missing {clean}")
+        print(f"{clean}")
         count +=1
 
 print(f"Total missing words {count}")
