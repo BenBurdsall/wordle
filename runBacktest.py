@@ -23,6 +23,8 @@ class backTest:
         backList =[]
 
         backtestfile = "./tests/backtestcomplete.txt"
+        #backtestfile = "./tests/backlistrecent.txt"
+
         with open(backtestfile, "r") as f:
             lines = f.readlines()
         count = 0
@@ -40,40 +42,46 @@ class backTest:
             print(f"Dictionary 5-letter word count  = {dict.wordCount()}")
             localws = localWordleSimulator(dict)
             statkeeper = stats()
-            statkeeper.registerStrategy("BB")
+            statkeeper.registerStrategy("BB1")
+            statkeeper.registerStrategy("BB2")
             statkeeper.registerStrategy("AB")
 
-            for secretWord in backList:
-                #secretWord='rebut'
-                localws.setSecretWord(secretWord)
+            strategyList = ["BB1","BB2"]
+            for strategy in strategyList:
 
-                # Play a single game
-                ai = AI()
-                ai.setDictionary(dict)
-                print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
-                guess = "tares"
-                guessCount =1
-                done = False
-                noWords = False
-                statkeeper.startClock("BB")
-                while guessCount <=self.NOGUESSES and not done and not noWords:
+                for secretWord in backList:
+                    #secretWord='rebut'
+                    localws.setSecretWord(secretWord)
 
-                    ai.enteredWord(guess)
-                    feedback  = localws.produceFeedback(guess)
-                    done,noWords = ai.enterWordleFeedback(feedback)
+                    # Play a single game
+                    ai = AI()
+                    ai.setDictionary(dict)
+                    print(f"******Starting new game - Trying to find secret word {localws.word} with a dictionary of {dict.wordCount()} words *********")
+                    guess = "tares"
+                    guessCount =1
+                    done = False
+                    noWords = False
+
+                    statkeeper.startClock(strategy)
+                    while guessCount <=self.NOGUESSES and not done and not noWords:
+
+                        ai.enteredWord(guess)
+                        feedback  = localws.produceFeedback(guess)
+                        done,noWords = ai.enterWordleFeedback(feedback)
+                        if not done:
+                            guess = ai.nextWord(strategy)
+                            print(f"next guess shall be {guess}")
+                        else:
+                            print(f"Word found {guess}={localws.word} found in {guessCount} guesses")
+                            statkeeper.addGameResult(strategy,True,guessCount)
+                        if noWords:
+                            print("Out of words ... giving up")
+                        guessCount += 1
+
+                    statkeeper.stopClock(strategy)
                     if not done:
-                        guess = ai.nextWord()
-                        print(f"next guess shall be {guess}")
-                    else:
-                        print(f"Word found {guess}={localws.word} found in {guessCount} guesses")
-                        statkeeper.addGameResult("BB",True,guessCount)
-                    if noWords:
-                        print("Out of words ... giving up")
-                    guessCount += 1
-
-                statkeeper.stopClock("BB")
-                if not done:
-                    statkeeper.addGameResult("BB", False, 0)
+                        print(f"** Failed to find word in 6 guesses: {secretWord} ")
+                        statkeeper.addGameResult(strategy, False, 0)
 
 
             print(statkeeper)
