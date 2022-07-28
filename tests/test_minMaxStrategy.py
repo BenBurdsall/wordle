@@ -26,7 +26,7 @@ class test_minMaxStrategy(unittest.TestCase):
             for i, l in enumerate(word):
                 idx *= 3
                 if l in w:
-                    idx += 2 if w[i] == l else 1
+                    idx += 2 if word[i] == l else 1
             partitions[idx] += 1
 
         # score a word based on how much it will reduce the active set size

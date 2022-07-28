@@ -26,12 +26,30 @@ class minMaxStrategy:
         self.master = masterdictionary.clone()
         self.opt = optimisation_function
 
-        # set up letter mapping and index all words
+        # set up letter mapping
         words = masterdictionary.lexicon
         letters = reduce(lambda s,w: s | set(w), words, set())
-        self.idx_letter = list(map(lambda l: ord(l), letters))
-        self.letter_idx = dict((l, i) for i, l in enumerate(self.idx_letter))
-        self.index = dict((w, self.indexWord(w)) for w in words)
+        idx_letter = list(map(lambda l: ord(l), letters))
+        letter_idx = dict((l, i) for i, l in enumerate(idx_letter))
+        # self.index = dict((w, self.indexWord(w)) for w in words)
+        
+        # index all words
+        index = {}
+        chars = np.zeros((len(words),5), dtype=np.uint8)
+        counts = np.zeros((len(words),len(idx_letter)), dtype=np.uint8)
+        for i,w in enumerate(words):
+            for j in range(5):
+                l = letter_idx[ord(w[j])]
+                chars[i,j] = l
+                counts[i,l] += 1
+            index[w] = i
+        
+        # store indexes/lookups as class variables
+        self.idx_letter = idx_letter
+        self.letter_idx = letter_idx
+        self.index = index
+        self.chars = chars
+        self.counts = counts
 
 
     # def indexWord(self, word):
