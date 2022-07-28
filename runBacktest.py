@@ -22,8 +22,8 @@ class backTest:
     def loadBacktest(self):
         backList =[]
 
-        backtestfile = "./tests/backtestcomplete.txt"
-        #backtestfile = "./tests/backlistrecent.txt"
+        #backtestfile = "./tests/backtestcomplete.txt"
+        backtestfile = "./tests/backlistrecent.txt"
 
         with open(backtestfile, "r") as f:
             lines = f.readlines()
