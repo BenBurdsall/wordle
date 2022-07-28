@@ -55,8 +55,23 @@ class AI:
         return False, noword
 
 
+
+    # Decides which strategy to implement when choosing the next letter
+    def _applyStrategy(self,strategy,freeslots,lt):
+
+        if strategy == "BB1":
+            tc = lt._findHighestOccrrance(freeslots)
+        elif strategy=="BB2":
+            tc = lt.findBestNextLetterPositionBB2(freeslots)
+        else:
+            self.logger.error(f"Unknown strategy requested: {strategy}")
+            exit(0)
+
+        return tc
+
+
     # Choose the best remaining letters are the candidate has been fixed and updated in the cloned slotcontainer passed here
-    def _chooseRemainingLetters(self,dictionary, slotcontain):
+    def _chooseRemainingLetters(self,dictionary, slotcontain,strategy):
         cloneSlotContainer = slotcontain.clone()
         cloneDictionary= dictionary
         lt = dictionary.lt
@@ -64,7 +79,7 @@ class AI:
         while needToFind > 0:
             # Find the most occuring letter in the free slots for the new dictionary
             freeSlots = cloneSlotContainer.freeSlots()
-            tc = lt._findHighestOccrrance(freeSlots)
+            tc = self._applyStrategy(strategy,freeSlots,lt)
             needToFind = len(freeSlots) - 1
             self.logger.debug(f"The most likely letter is {tc} . There are {needToFind} additional free letters")
             # Now the best letter has been chosen - remove that position from the free Slots
@@ -80,11 +95,11 @@ class AI:
         return guess
 
     # Returns the next word to try to send to Wordle. Returns nextWord , boolean. True when run out of words.
-    def nextWord(self, strategy=BB):
+    def nextWord(self, strategy="BB1"):
         wordguess = None
 
         # The filteredDictionary Now only contains the WordContains information - so this can be removed from slotContainer for LETTERS that are fixed
-        if strategy=="BB":
+        if strategy in ["BB1","BB2"]:
             self.slotcon.removedFixedWordContains()
 
             if self.dictionary.isOutofWords():
@@ -93,7 +108,7 @@ class AI:
 
 
             # choose which stratey to use: clear-and-vebose or terse!
-            wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon)
+            wordguess = self._chooseRemainingLetters(self.dictionary,self.slotcon,strategy)
         elif strategy=="AB":
             pass
             # Andre call your next word guess

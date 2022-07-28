@@ -23,6 +23,43 @@ class letterTally:
 
 
 
+    # Find the most frequently occuring letter in remaining free positions
+    def _findMostOccurringLetterinFreePostions(self, freePositionList):
+        temptally = {}
+        for pos in freePositionList:
+            posDict = self.letterPosition[pos]
+            # for the given position now find the tally for each letter
+            for letter in posDict:
+                freq = posDict[letter]
+                if letter not in temptally:
+                    temptally[letter]=freq
+                else:
+                    temptally[letter] +=freq
+
+        hf,letter = self._findMaxInDict(temptally)
+        return letter,hf
+
+
+    def _findPositionWhereLetterOccursMost(self,letter, freePositionList):
+        hf = 0
+        position =1
+        for pos in freePositionList:
+            posDict = self.letterPosition[pos]
+            if letter in posDict:
+                f = posDict[letter]
+                if f > hf:
+                    position = pos
+                    hf = f
+        return position
+
+    # implements the BB2 strategy of first getting the most frequent letter across all remaining slots and then selecting the position where this occurs.
+    def findBestNextLetterPositionBB2(self,freePositionList):
+
+        letter,hf = self._findMostOccurringLetterinFreePostions(freePositionList)
+        position = self._findPositionWhereLetterOccursMost(letter,freePositionList)
+        tc = tupleCount(letter, position, hf)
+        return tc
+
 
 
 
